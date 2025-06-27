@@ -28,37 +28,34 @@ Các bài tập được thực hiện trên ảnh "Đà Lạt" ('dalat.jpg'), v
 Các bài tập được thực hiện trên ảnh "Đà Lạt" (giả định là `dalat.jpg`), với các vùng ảnh cụ thể được chọn để áp dụng các phép biến đổi.
 
 ### Bài 1: Phân vùng LangBiang - Dịch chuyển & Otsu Thresholding
-* **Mục đích:** Trích xuất và phân đoạn vùng núi LangBiang.
-* **Tịnh tiến vùng chọn:** Dịch chuyển vùng LangBiang sang phải 100px.
-    * **Công thức dịch chuyển:** $(x', y') = (x + T_x, y + T_y)$ với $T_x = 100$, $T_y = 0$.
-* **Phân vùng bằng Otsu:** Tự động tìm ngưỡng phân chia tiền cảnh/hậu cảnh trên vùng đã dịch chuyển.
-    * **Nguyên lý Otsu:** Tối đa hóa phương sai giữa hai lớp (ảnh nền và đối tượng).
+* **Mục đích:** Tìm và tách vùng núi LangBiang trong ảnh.
+* **Dịch chuyển vùng chọn:** Di chuyển vùng LangBiang sang phải 100 pixel.
+    * **Cách làm:** Cộng thêm 100 vào vị trí ngang của mỗi điểm ảnh.
+* **Phân vùng bằng Otsu:** Tự động chia vùng đã dịch chuyển thành hai phần (ví dụ: núi và trời) bằng cách tìm một ngưỡng sáng phù hợp nhất.
+    * **Nguyên lý:** Thuật toán tự tìm điểm phân chia tốt nhất dựa trên độ sáng của ảnh.
 * **Lưu ảnh:** `lang_biang.jpg`
 
 ### Bài 2: Phân vùng Hồ Xuân Hương - Xoay & Adaptive Thresholding
-* **Mục đích:** Xoay vùng ảnh và áp dụng ngưỡng thích nghi để phân đoạn.
-* **Xoay đối tượng:** Xoay vùng Hồ Xuân Hương 45 độ quanh tâm.
-    * **Công thức xoay:**
-        $x' = x_c + (x - x_c)\cos\theta - (y - y_c)\sin\theta$
-        $y' = y_c + (x - x_c)\sin\theta + (y - y_c)\cos\theta$
-        Với $(x_c, y_c)$ là tâm xoay và $\theta = 45^\circ$.
-* **Adaptive Thresholding:** Áp dụng ngưỡng cục bộ với hằng số $C = 60$.
-    * **Công thức Adaptive Threshold:** $T(x,y) = \text{Mean}(N(x,y)) - C$.
+* **Mục đích:** Xoay một phần ảnh và làm rõ chi tiết bằng cách phân chia độ sáng cục bộ.
+* **Xoay đối tượng:** Xoay vùng Hồ Xuân Hương một góc 45 độ quanh tâm của nó.
+    * **Cách làm:** Dùng các phép tính toán để thay đổi vị trí điểm ảnh theo góc xoay.
+* **Adaptive Thresholding:** Chia vùng ảnh đã xoay thành đen trắng, nhưng ngưỡng chia này tự động thay đổi theo từng khu vực nhỏ của ảnh, thay vì dùng một ngưỡng chung.
+    * **Nguyên lý:** Mỗi vùng nhỏ trong ảnh sẽ có ngưỡng sáng riêng, giúp xử lý tốt ảnh thiếu sáng hoặc có vùng sáng không đều.
 * **Lưu ảnh:** `ho_xuan_huong.jpg`
 
 ### Bài 3: Phân vùng Quảng trường Lâm Viên - Coordinate Mapping & Binary Closing
-* **Mục đích:** Trích xuất vùng và làm mịn bằng phép toán hình thái học.
-* **Coordinate Mapping:** Tạo mặt nạ nhị phân cho vùng Quảng trường Lâm Viên dựa trên tọa độ.
-    * **Nguyên lý:** Đánh dấu pixel trong vùng là 1 (hoặc 255), còn lại là 0.
-* **Binary Closing:** Áp dụng phép toán đóng nhị phân trên mặt nạ.
-    * **Công thức Binary Closing:** $A \bullet B = (A \oplus B) \ominus B$.
+* **Mục đích:** Chọn một vùng cụ thể và làm mịn ranh giới của nó.
+* **Coordinate Mapping:** Tạo một "bản đồ" (mask) chỉ ra vị trí chính xác của Quảng trường Lâm Viên trên ảnh. Các điểm thuộc vùng này được đánh dấu, còn lại thì không.
+    * **Nguyên lý:** Dùng tọa độ để tạo một vùng trắng trên nền đen.
+* **Binary Closing:** Làm đầy các lỗ nhỏ hoặc nối các phần bị đứt của vùng đã chọn.
+    * **Nguyên lý:** Là sự kết hợp của giãn nở (làm phình to) và co hẹp (làm thu nhỏ) để đóng các khoảng trống.
 * **Lưu ảnh:** `quan_truong_lam_vien.jpg`
 
 ### Bài 4: Tạo Menu tương tác
-* **Mục đích:** Xây dựng chương trình tương tác cho phép người dùng lựa chọn chức năng xử lý ảnh.
-* **Menu:** Gồm `geometric_transformation` (coordinate_mapping, Rotate, Scale, Shift) và `segment` (Adaptive_thresholding, Binary_dilation, Binary_erosion, Otsu).
-* **Lựa chọn:** Chọn 1 chức năng duy nhất hoặc kết hợp 1 từ `geometric_transformation` và 1 từ `segment`.
-* **Hiển thị:** Kết quả của mỗi phép xử lý được hiển thị.
+* **Mục đích:** Cho phép người dùng dễ dàng chọn và thử các chức năng xử lý ảnh khác nhau.
+* **Menu:** Hiển thị danh sách các phép biến đổi hình học (như dịch chuyển, xoay, co giãn, chọn vùng) và các phép phân đoạn (như Otsu, ngưỡng thích nghi, làm phình, làm co).
+* **Lựa chọn:** Người dùng có thể chọn một chức năng riêng lẻ hoặc kết hợp một phép biến đổi hình học với một phép phân đoạn.
+* **Hiển thị:** Kết quả của mỗi phép xử lý sẽ được hiển thị trên màn hình.
 
    ## Hướng dẫn sử dụng
 
