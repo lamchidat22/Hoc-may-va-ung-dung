@@ -1,5 +1,7 @@
 # Báo cáo Thực hành Lab 3: Các Biến đổi hình học
 
+** GV:** TS. Đỗ Hữu Quân
+
 ## Sinh viên thực hiện
 **Tên:** Bùi Lâm Chí Đạt
 **Mã số sinh viên:** 207CT27720
