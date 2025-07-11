@@ -1,4 +1,4 @@
-## Lab 5 - Xử lý và Đo lường Ảnh
+## Lab 5 - Xác định đối tượng trong ảnh
 
 * Sinh viên thực hiện: Bùi Lâm Chí Đạt
 * MSSV: 207CT27720
